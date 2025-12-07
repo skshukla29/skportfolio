@@ -1,9 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Float, Environment } from '@react-three/drei';
 import RotatingCube from '../components/RotatingCube';
 
+// Use public/profile.jpg (copied from src/assets) as the placeholder/default image
+const placeholder = '/profile.jpg';
+
 const Home = () => {
+  // component that renders the profile image clipped to an ellipse and handles fallback
+  const EllipseImage = () => {
+  const [src, setSrc] = useState(placeholder); // use local assets image by default
+
+    return (
+      <img
+        src={src}
+        alt="Shashikant Profile"
+        onError={() => {
+          if (src !== placeholder) setSrc(placeholder);
+        }}
+        style={{
+          width: '120%',
+          height: '120%',
+          objectFit: 'cover',
+          objectPosition: 'center',
+          filter: 'grayscale(20%) drop-shadow(0 0 20px rgba(255, 255, 255, 0.3))',
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          clipPath: 'ellipse(50% 50% at 50% 50%)',
+          WebkitClipPath: 'ellipse(50% 50% at 50% 50%)'
+        }}
+      />
+    );
+  };
+
   return (
     <section id="home" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '1rem', paddingTop: '4rem', position: 'relative' }}>
       {/* Floating particles effect */}
@@ -98,12 +129,12 @@ const Home = () => {
         
         {/* Right side with profile image in ellipse */}
         <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div style={{ position: 'relative', width: '350px', height: '400px' }}>
+          <div style={{ position: 'relative', width: '350px', height: '450px' }}>
             {/* Ellipse shape with 3D effect */}
             <div style={{
               position: 'absolute',
               width: '350px',
-              height: '400px',
+              height: '450px',
               borderRadius: '50%',
               background: 'radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 70%, rgba(255, 255, 255, 0.02) 100%)',
               border: '2px solid rgba(255, 255, 255, 0.3)',
@@ -115,18 +146,14 @@ const Home = () => {
               transformStyle: 'preserve-3d',
               perspective: '1000px'
             }}>
-              {/* Profile image placeholder */}
-              <img 
-                src="./assets/profile-placeholder.svg" 
-                alt="Profile" 
-                style={{ width: '280px', height: '280px', objectFit: 'cover', borderRadius: '50%', filter: 'drop-shadow(0 0 20px rgba(255, 255, 255, 0.3))', transform: 'translateZ(50px)' }}
-              />
+              {/* Profile image (fills ellipse via clip-path). Uses /profile.jpg from public/ if present, otherwise falls back to placeholder. */}
+              <EllipseImage />
               
               {/* Decorative elements */}
               <div style={{
                 position: 'absolute',
                 width: '370px',
-                height: '370px',
+                height: '470px',
                 borderRadius: '50%',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
                 top: '-10px',
@@ -137,7 +164,7 @@ const Home = () => {
               <div style={{
                 position: 'absolute',
                 width: '390px',
-                height: '390px',
+                height: '490px',
                 borderRadius: '50%',
                 border: '1px solid rgba(255, 255, 255, 0.1)',
                 top: '-20px',
